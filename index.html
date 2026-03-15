@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meyssens – Digitale Bürgerbeteiligung für Schweizer Gemeinden</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+
+/* ─── TOKENS ─── */
+:root{
+  --blue:#0000ff;
+  --blue-h:#0000cc;
+  --blue-5:rgba(0,0,255,.05);
+  --blue-8:rgba(0,0,255,.08);
+  --blue-12:rgba(0,0,255,.12);
+  --blue-20:rgba(0,0,255,.20);
+  --blue-35:rgba(0,0,255,.35);
+
+  --ink:#07071a;
+  --ink2:#3c3c60;
+  --ink3:#8080a8;
+  --ink4:#b0b0cc;
+
+  --white:#ffffff;
+  --surface:#f8f8fd;
+  --surface2:#f2f2fa;
+  --surface3:#eaeaf5;
+
+  --line:rgba(0,0,0,.07);
+  --line2:rgba(0,0,255,.10);
+
+  --r-sm:8px;
+  --r-md:12px;
+  --r-lg:16px;
+  --r-xl:24px;
+
+  --shadow-sm:0 2px 8px rgba(0,0,100,.06);
+  --shadow-md:0 8px 32px rgba(0,0,100,.08);
+  --shadow-lg:0 20px 60px rgba(0,0,100,.10);
+}
+
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-weight:300;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--line);
+  transition:box-shadow .3s;
+}
+nav.scrolled{box-shadow:var(--shadow-sm)}
+.logo img{height:24px;display:block}
+.nav-items{list-style:none;display:flex;align-items:center;gap:2rem}
+.nav-items a{
+  color:var(--ink3);font-size:.85rem;font-weight:400;
+  text-decoration:none;transition:color .2s;
+  position:relative;
+}
+.nav-items a:hover{color:var(--ink)}
+.nav-items a.active{color:var(--blue)}
+.nav-items a.active::after{
+  content:'';position:absolute;bottom:-20px;left:0;right:0;
+  height:2px;background:var(--blue);border-radius:1px;
+}
+.nav-btn{
+  background:var(--blue)!important;color:#fff!important;
+  padding:.5rem 1.25rem!important;border-radius:var(--r-sm)!important;
+  font-weight:500!important;transition:background .2s!important;
+}
+.nav-btn:hover{background:var(--blue-h)!important;color:#fff!important}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  padding:calc(60px + 5rem) 5% 5rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';
+  position:absolute;top:0;right:0;
+  width:60%;height:100%;
+  background:var(--surface);
+  clip-path:polygon(8% 0,100% 0,100% 100%,0 100%);
+  z-index:0;
+}
+.hero-l,.hero-r{position:relative;z-index:1}
+
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:.35rem .9rem;
+  border-radius:100px;
+  border:1px solid var(--blue-20);
+  background:var(--blue-5);
+  font-size:.72rem;font-weight:500;
+  color:var(--blue);letter-spacing:.04em;
+  margin-bottom:2rem;
+}
+.chip-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--blue);
+  animation:pulse 2.5s ease infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+
+h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.8rem,5.5vw,5.2rem);
+  font-weight:800;
+  line-height:1.04;
+  letter-spacing:-.04em;
+  color:var(--ink);
+  margin-bottom:1.5rem;
+}
+h1 .hl{color:var(--blue)}
+
+.lead{
+  font-size:1.05rem;color:var(--ink3);
+  line-height:1.8;max-width:480px;
+  margin-bottom:2.5rem;
+}
+
+.btns{display:flex;gap:.875rem;flex-wrap:wrap;margin-bottom:3rem}
+.btn-p{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue);color:#fff;
+  padding:.875rem 1.75rem;border-radius:var(--r-sm);
+  font-size:.9rem;font-weight:500;
+  text-decoration:none;border:none;cursor:pointer;
+  font-family:'Inter',sans-serif;
+  transition:background .2s,transform .15s;
+}
+.btn-p:hover{background:var(--blue-h);transform:translateY(-1px)}
+.btn-s{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--line);
+  padding:.875rem 1.75rem;border-radius:var(--r-sm);
+  font-size:.9rem;font-weight:400;
+  text-decoration:none;
+  transition:border-color .2s,color .2s,transform .15s;
+}
+.btn-s:hover{border-color:var(--blue-20);color:var(--blue);transform:translateY(-1px)}
+
+.proof{display:flex;align-items:center;gap:10px}
+.proof-avatars{display:flex}
+.av{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid white;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;
+  color:white;margin-left:-7px;
+}
+.av:first-child{margin-left:0}
+.av-1{background:var(--blue)}
+.av-2{background:#1a1aff}
+.av-3{background:#3333ff}
+.proof-text{font-size:.78rem;color:var(--ink3)}
+
+/* HERO RIGHT — CARDS */
+.hero-cards{display:flex;flex-direction:column;gap:.875rem}
+.hcard{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:1.5rem;
+  transition:box-shadow .25s,transform .25s;
+}
+.hcard:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.hcard.blue{background:var(--blue);border-color:var(--blue);color:white}
+.hcard-row{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+.hcard-label{
+  font-size:.65rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink4);margin-bottom:.4rem;
+}
+.hcard.blue .hcard-label{color:rgba(255,255,255,.55)}
+.hcard-val{
+  font-family:'Syne',sans-serif;
+  font-size:2.2rem;font-weight:800;
+  line-height:1;letter-spacing:-.04em;
+  color:var(--ink);
+}
+.hcard.blue .hcard-val{color:white}
+.hcard-sub{font-size:.78rem;color:var(--ink3);margin-top:.2rem}
+.hcard.blue .hcard-sub{color:rgba(255,255,255,.6)}
+.hcard-bar{
+  height:3px;background:rgba(255,255,255,.2);
+  border-radius:2px;margin-top:1rem;overflow:hidden;
+}
+.hcard-bar-fill{height:100%;background:rgba(255,255,255,.6);border-radius:2px;width:80%}
+.city-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:.875rem}
+.city-chip{
+  font-size:.7rem;font-weight:500;padding:.2rem .65rem;
+  border-radius:100px;
+  background:var(--blue-8);color:var(--blue);
+  border:1px solid var(--blue-12);
+}
+
+/* ─── DIVIDER BAR ─── */
+.bar{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:var(--surface);
+  padding:1.5rem 5%;
+  display:flex;align-items:center;gap:1.5rem;
+  flex-wrap:wrap;
+}
+.bar-label{font-size:.7rem;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.bar-tag{
+  font-size:.78rem;font-weight:500;
+  padding:.3rem .875rem;
+  border-radius:var(--r-sm);
+  border:1px solid var(--line);
+  color:var(--ink2);background:var(--white);
+  white-space:nowrap;
+}
+
+/* ─── SECTIONS ─── */
+section{padding:6rem 5%}
+.s-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.7rem;font-weight:600;
+  color:var(--blue);letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:.875rem;
+}
+.s-label::before{content:'';width:18px;height:2px;background:var(--blue);border-radius:1px}
+h2{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.9rem,3.5vw,2.8rem);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.03em;color:var(--ink);
+  margin-bottom:1rem;
+}
+.s-lead{
+  font-size:.975rem;color:var(--ink3);
+  max-width:480px;line-height:1.8;
+  margin-bottom:3.5rem;
+}
+
+/* ─── FEATURES ─── */
+#funktionen{background:var(--surface)}
+.feat-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.feat{
+  background:var(--white);
+  padding:2.25rem;
+  position:relative;
+  transition:background .25s;
+}
+.feat:hover{background:var(--surface)}
+.feat.wide{grid-column:span 2}
+.feat.dark{background:var(--ink);border-color:var(--ink)}
+.feat.dark:hover{background:#0f0f28}
+.feat-icon-box{
+  width:40px;height:40px;
+  border-radius:var(--r-sm);
+  background:var(--blue-8);
+  border:1px solid var(--blue-12);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);
+  margin-bottom:1.25rem;
+  transition:background .25s,border-color .25s;
+}
+.feat:hover .feat-icon-box{background:var(--blue-12);border-color:var(--blue-20)}
+.feat.dark .feat-icon-box{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);color:white}
+.feat-tag-row{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:.5rem}
+.feat.dark .feat-tag-row{color:rgba(255,255,255,.4)}
+.feat h3{font-family:'Syne',sans-serif;font-size:.975rem;font-weight:700;color:var(--ink);margin-bottom:.5rem;letter-spacing:-.01em}
+.feat.dark h3{color:white}
+.feat p{font-size:.85rem;color:var(--ink3);line-height:1.7}
+.feat.dark p{color:rgba(255,255,255,.55)}
+.tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:1rem}
+.tag{
+  font-size:.65rem;font-weight:500;padding:.2rem .6rem;
+  border-radius:4px;
+  background:var(--blue-8);color:var(--blue);
+  border:1px solid var(--blue-12);
+}
+.tag.light{background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.12)}
+
+/* ─── PROCESS ─── */
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;
+  position:relative;
+}
+.steps::before{
+  content:'';
+  position:absolute;top:19px;
+  left:calc(12.5% + 19px);right:calc(12.5% + 19px);
+  height:1px;background:var(--line2);
+}
+.step{text-align:center;position:relative}
+.step-n{
+  width:38px;height:38px;border-radius:50%;
+  border:1.5px solid var(--blue-20);
+  background:var(--white);
+  color:var(--blue);
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.25rem;
+  position:relative;z-index:1;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.step:hover .step-n{background:var(--blue);border-color:var(--blue);color:white}
+.step h3{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:.4rem}
+.step p{font-size:.8rem;color:var(--ink3);line-height:1.65}
+
+/* ─── PRICING ─── */
+#preise{background:var(--surface)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.pcard{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--r-xl);
+  padding:2.25rem;
+  position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+}
+.pcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.pcard.top{border-color:var(--blue);border-width:1.5px}
+.pcard.top::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--blue);
+}
+.pbadge{
+  display:inline-block;
+  font-size:.65rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:.25rem .7rem;border-radius:4px;
+  background:var(--blue-8);color:var(--blue);
+  border:1px solid var(--blue-12);
+  margin-bottom:1.5rem;
+}
+.ptier{font-size:.65rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.12em;font-weight:600;margin-bottom:.3rem}
+.ptitle{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--ink);margin-bottom:.4rem;letter-spacing:-.02em}
+.pdesc{font-size:.82rem;color:var(--ink3);line-height:1.6;margin-bottom:1.75rem}
+.psetup{
+  display:flex;justify-content:space-between;
+  background:var(--surface2);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  padding:.5rem .875rem;
+  font-size:.78rem;color:var(--ink3);
+  margin-bottom:1.25rem;
+}
+.psetup strong{color:var(--blue);font-weight:600}
+.pamount{display:flex;align-items:baseline;gap:4px;margin-bottom:.2rem}
+.pnum{
+  font-family:'Syne',sans-serif;
+  font-size:2.5rem;font-weight:800;
+  color:var(--ink);letter-spacing:-.04em;line-height:1;
+}
+.punit{font-size:.8rem;color:var(--ink3)}
+.pannual{font-size:.73rem;color:var(--ink4);margin-bottom:1.75rem}
+.phr{border:none;border-top:1px solid var(--line);margin:1.25rem 0}
+.plist{list-style:none}
+.plist li{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:.85rem;color:var(--ink3);padding:.38rem 0;
+}
+.pcheck{
+  width:16px;height:16px;border-radius:50%;
+  background:var(--blue-8);border:1px solid var(--blue-12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
+}
+.pcheck svg{display:block}
+.pcta{
+  display:block;width:100%;margin-top:1.75rem;
+  padding:.8rem;border-radius:var(--r-sm);
+  text-align:center;font-size:.875rem;font-weight:500;
+  text-decoration:none;cursor:pointer;
+  font-family:'Inter',sans-serif;border:none;
+  transition:all .2s;
+}
+.pcta-out{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.pcta-out:hover{border-color:var(--blue-20);color:var(--blue)}
+.pcta-fill{background:var(--blue);color:white}
+.pcta-fill:hover{background:var(--blue-h)}
+
+/* ─── REFERENCES ─── */
+.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.rcard{
+  padding:2rem;
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  background:var(--white);
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+}
+.rcard:hover{border-color:var(--blue-20);transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.rstars{
+  display:flex;gap:3px;margin-bottom:1rem;
+}
+.rstar{
+  width:14px;height:14px;
+  background:var(--blue);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+}
+.rquote{font-size:.875rem;color:var(--ink3);line-height:1.75;font-style:italic;margin-bottom:1.5rem}
+.rauthor{display:flex;align-items:center;gap:10px}
+.rav{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:.68rem;font-weight:800;
+  color:white;flex-shrink:0;
+}
+.rname{font-size:.85rem;font-weight:500;color:var(--ink)}
+.rorg{font-size:.75rem;color:var(--ink3)}
+
+/* ─── ABOUT ─── */
+#ueber-uns{background:var(--surface)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.about-quote{
+  font-family:'Syne',sans-serif;
+  font-size:1.05rem;font-weight:700;
+  line-height:1.55;letter-spacing:-.015em;
+  border-left:2px solid var(--blue);
+  padding-left:1.25rem;margin:2rem 0;color:var(--ink);
+}
+.acard{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--r-xl);
+  overflow:hidden;
+}
+.acard-top{
+  background:var(--blue);
+  padding:1.75rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;
+}
+.astat-label{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.3rem}
+.astat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:white;letter-spacing:-.04em;line-height:1}
+.astat-sub{font-size:.72rem;color:rgba(255,255,255,.55);margin-top:.2rem}
+.acard-body{padding:1.75rem}
+.tech-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.75rem 0;border-bottom:1px solid var(--line);
+}
+.tech-row:first-child{padding-top:0}
+.tech-row:last-child{border-bottom:none;padding-bottom:0}
+.tech-name{font-size:.875rem;color:var(--ink)}
+.tech-pill{
+  font-size:.62rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:.2rem .65rem;border-radius:4px;
+  background:var(--blue-8);color:var(--blue);border:1px solid var(--blue-12);
+}
+
+/* ─── CTA STRIP ─── */
+.cta-strip{
+  background:var(--blue);
+  padding:4.5rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:2rem;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.cta-strip::after{
+  content:'';position:absolute;
+  right:-5%;top:-50%;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,.03);
+  pointer-events:none;
+}
+.cta-h{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.5rem,2.5vw,2.25rem);
+  font-weight:800;letter-spacing:-.03em;
+  color:white;margin-bottom:.5rem;
+}
+.cta-sub{font-size:.9rem;color:rgba(255,255,255,.65)}
+.cta-btns{display:flex;gap:.875rem;flex-wrap:wrap;position:relative;z-index:1}
+.btn-w{
+  display:inline-flex;align-items:center;gap:8px;
+  background:white;color:var(--blue);
+  padding:.875rem 1.75rem;border-radius:var(--r-sm);
+  font-size:.875rem;font-weight:600;
+  text-decoration:none;transition:opacity .2s,transform .15s;
+}
+.btn-w:hover{opacity:.92;transform:translateY(-1px)}
+.btn-wg{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:rgba(255,255,255,.85);
+  border:1px solid rgba(255,255,255,.3);
+  padding:.875rem 1.75rem;border-radius:var(--r-sm);
+  font-size:.875rem;font-weight:400;
+  text-decoration:none;transition:border-color .2s,transform .15s;
+}
+.btn-wg:hover{border-color:rgba(255,255,255,.65);transform:translateY(-1px)}
+
+/* ─── CONTACT ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ccard{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--r-xl);
+  padding:2.25rem;
+}
+.fgrp{margin-bottom:1.125rem}
+.flabel{display:block;font-size:.75rem;color:var(--ink3);margin-bottom:.4rem}
+.finput,.fselect,.ftextarea{
+  width:100%;background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:.75rem 1rem;
+  color:var(--ink);font-family:'Inter',sans-serif;
+  font-size:.875rem;font-weight:300;
+  outline:none;transition:border-color .2s,background .2s;
+  -webkit-appearance:none;
+}
+.finput:focus,.fselect:focus,.ftextarea:focus{
+  border-color:var(--blue-35);background:var(--white);
+}
+.ftextarea{resize:vertical;min-height:110px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.cinfo-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:2rem}
+.cicon{
+  width:40px;height:40px;border-radius:var(--r-sm);
+  background:var(--blue-8);border:1px solid var(--blue-12);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);flex-shrink:0;
+}
+.clabel{font-size:.68rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.cval{font-size:.9rem;color:var(--ink);font-weight:400}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--ink);
+  padding:2.25rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+}
+.flogo img{height:22px;filter:brightness(0) invert(1)}
+footer p{color:rgba(255,255,255,.3);font-size:.78rem}
+.flinks{display:flex;gap:1.75rem}
+.flinks a{color:rgba(255,255,255,.3);text-decoration:none;font-size:.78rem;transition:color .2s}
+.flinks a:hover{color:rgba(255,255,255,.8)}
+
+/* ─── REVEAL ─── */
+.r{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.r.on{opacity:1;transform:none}
+.r.d1{transition-delay:.1s}.r.d2{transition-delay:.2s}.r.d3{transition-delay:.3s}
+
+/* ─── HERO ENTER ─── */
+.hero-l{animation:up .75s ease both}
+.hero-r{animation:up .75s .12s ease both}
+@keyframes up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding:calc(60px + 4rem) 5% 4rem}
+  .hero-r{display:none}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .feat.wide{grid-column:1/-1}
+  .cards{grid-template-columns:1fr;max-width:420px}
+  .steps{grid-template-columns:1fr 1fr}
+  .steps::before{display:none}
+  .ref-grid{grid-template-columns:1fr}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:3rem}
+  .cta-strip{flex-direction:column;align-items:flex-start}
+  .frow{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  nav{padding:0 1.5rem}
+  .nav-items{display:none}
+  section{padding:5rem 5%}
+  .feat-grid{grid-template-columns:1fr}
+  .feat.wide{grid-column:1}
+  .steps{grid-template-columns:1fr}
+  .bar{padding:1.25rem 5%}
+}
+
+/* ─── TRUST SECTION ─── */
+#vertrauen{background:var(--surface)}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:3rem}
+.trust-card{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:2rem;
+  transition:border-color .25s,transform .25s;
+}
+.trust-card:hover{border-color:var(--blue-20);transform:translateY(-2px)}
+.trust-icon{
+  width:40px;height:40px;border-radius:var(--r-sm);
+  background:var(--blue-8);border:1px solid var(--blue-12);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);margin-bottom:1.25rem;
+}
+.trust-card h3{font-family:'Syne',sans-serif;font-size:.975rem;font-weight:700;color:var(--ink);margin-bottom:.5rem}
+.trust-card p{font-size:.85rem;color:var(--ink3);line-height:1.7}
+.trust-note{
+  background:var(--white);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:1.75rem 2rem;
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+}
+.trust-note-icon{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--blue-8);border:1px solid var(--blue-12);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--blue);flex-shrink:0;
+}
+.trust-note p{font-size:.875rem;color:var(--ink3);line-height:1.7;margin:0}
+.trust-note strong{color:var(--ink);font-weight:500}
+
+/* ─── FOOTER LEGAL ─── */
+.footer-legal{
+  border-top:1px solid rgba(255,255,255,.08);
+  margin-top:1.5rem;padding-top:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.75rem;
+  width:100%;
+}
+.footer-legal a{color:rgba(255,255,255,.3);text-decoration:none;font-size:.75rem;transition:color .2s}
+.footer-legal a:hover{color:rgba(255,255,255,.7)}
+.footer-legal p{color:rgba(255,255,255,.2);font-size:.75rem}
+
+/* ─── IMPRESSUM / DATENSCHUTZ MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--white);border-radius:var(--r-xl);
+  max-width:680px;width:100%;max-height:80vh;
+  overflow-y:auto;padding:2.5rem;
+  position:relative;transform:translateY(16px);
+  transition:transform .25s;
+}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-close{
+  position:absolute;top:1.25rem;right:1.25rem;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink3);font-size:1rem;
+  transition:background .2s;
+}
+.modal-close:hover{background:var(--surface2)}
+.modal h2{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--ink);margin-bottom:1.5rem;letter-spacing:-.025em}
+.modal h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--ink);margin:1.5rem 0 .5rem}
+.modal p,.modal li{font-size:.875rem;color:var(--ink3);line-height:1.75;margin-bottom:.5rem}
+.modal ul{padding-left:1.25rem;margin-bottom:.75rem}
+.modal a{color:var(--blue)}
+
+@media(max-width:1024px){.trust-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.trust-grid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><img src="logo.png" alt="Meyssens"></a>
+  <ul class="nav-items">
+    <li><a href="#funktionen">Funktionen</a></li>
+    <li><a href="#ablauf">Ablauf</a></li>
+    <li><a href="#preise">Preise</a></li>
+    <li><a href="#vertrauen">Vertrauen</a></li>
+    <li><a href="#ueber-uns">Über uns</a></li>
+    <li><a href="#kontakt" class="nav-btn">Demo anfragen</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-l">
+    <div class="chip"><span class="chip-dot"></span>Jetzt verfügbar für Schweizer Gemeinden</div>
+    <h1>Digitale Beteiligung<br>für <span class="hl">Ihre Gemeinde.</span></h1>
+    <p class="lead">Meyssens bringt Schweizer Gemeinden eine fertig eingerichtete Bürgerbeteiligungs-Plattform — in 2–4 Wochen live, persönlich begleitet, fair bepreist.</p>
+    <div class="btns">
+      <a href="http://34.91.226.69:3000" target="_blank" class="btn-p">
+        Live-Demo ansehen
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#kontakt" class="btn-s">Gespräch anfragen</a>
+    </div>
+    <div class="proof">
+      <div class="proof-avatars">
+        <div class="av av-1">LU</div>
+        <div class="av av-2">ZH</div>
+        <div class="av av-3">LS</div>
+      </div>
+      <span class="proof-text">Decidim bereits im Einsatz in Luzern, Zürich &amp; Lausanne</span>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="hero-cards">
+      <div class="hcard-row">
+        <div class="hcard blue">
+          <div class="hcard-label">Städte weltweit</div>
+          <div class="hcard-val">400+</div>
+          <div class="hcard-sub">nutzen Decidim</div>
+          <div class="hcard-bar"><div class="hcard-bar-fill"></div></div>
+        </div>
+        <div class="hcard">
+          <div class="hcard-label">Einrichtung</div>
+          <div class="hcard-val" style="color:var(--blue)">2–4</div>
+          <div class="hcard-sub">Wochen bis Launch</div>
+        </div>
+      </div>
+      <div class="hcard">
+        <div class="hcard-label" style="margin-bottom:.75rem">Bereits aktiv in der Schweiz</div>
+        <div class="city-wrap">
+          <span class="city-chip">Luzern</span>
+          <span class="city-chip">Zürich</span>
+          <span class="city-chip">Lausanne</span>
+          <span class="city-chip">Kanton Genf</span>
+          <span class="city-chip">Köniz</span>
+          <span class="city-chip">+ mehr</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAR -->
+<div class="bar">
+  <span class="bar-label">Plattform im Einsatz in</span>
+  <a href="https://www.dialog.stadtluzern.ch" target="_blank" class="bar-tag" style="text-decoration:none">Stadt Luzern</a>
+  <a href="https://mitwirken.stadt-zuerich.ch" target="_blank" class="bar-tag" style="text-decoration:none">Stadt Zürich</a>
+  <a href="https://lausanneensemble.lausanne.ch" target="_blank" class="bar-tag" style="text-decoration:none">Lausanne</a>
+  <a href="https://ge.ch" target="_blank" class="bar-tag" style="text-decoration:none">Kanton Genf</a>
+  <span class="bar-tag">Gemeinde Köniz</span>
+  <a href="https://futureu.europa.eu" target="_blank" class="bar-tag" style="text-decoration:none">EU-Kommission</a>
+</div>
+
+<!-- FUNKTIONEN -->
+<section id="funktionen">
+  <div class="r">
+    <span class="s-label">Funktionen</span>
+    <h2>Alles was Ihre Gemeinde braucht</h2>
+    <p class="s-lead">Eine Plattform für alle Beteiligungsprozesse — von Vorschlägen bis zum partizipativen Budget.</p>
+  </div>
+  <div class="feat-grid r">
+    <div class="feat dark">
+      <div class="feat-tag-row">Kern</div>
+      <div class="feat-icon-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="14" height="14" rx="2"/><path d="M6 6h6M6 9h6M6 12h4"/></svg>
+      </div>
+      <h3>Beteiligungsprozesse</h3>
+      <p>Strukturierte Prozesse zu Stadtentwicklung, Mobilität oder Wohnen — mit klaren Phasen und Timelines.</p>
+      <div class="tag-row">
+        <span class="tag light">Informell</span>
+        <span class="tag light">Formell</span>
+        <span class="tag light">Mehrstufig</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-tag-row">Abstimmung</div>
+      <div class="feat-icon-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><path d="M6.5 9l2 2 3.5-3.5"/></svg>
+      </div>
+      <h3>Vorschläge & Abstimmung</h3>
+      <p>Bürgerinnen und Bürger reichen Ideen ein, kommentieren und stimmen direkt auf der Plattform ab.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-tag-row">Budget</div>
+      <div class="feat-icon-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="16" height="10" rx="2"/><path d="M1 8h16"/><circle cx="9" cy="12" r="1.5"/></svg>
+      </div>
+      <h3>Partizipatives Budget</h3>
+      <p>Die Bevölkerung entscheidet mit, wofür das Gemeindebudget eingesetzt wird — transparent und nachvollziehbar.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-tag-row">Events</div>
+      <div class="feat-icon-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="14" height="13" rx="2"/><path d="M2 8h14M6 1v4M12 1v4"/></svg>
+      </div>
+      <h3>Veranstaltungen</h3>
+      <p>Gemeindeversammlungen, Foren und Events direkt auf der Plattform publizieren und verwalten.</p>
+    </div>
+    <div class="feat wide">
+      <div class="feat-tag-row">Datenschutz & Sicherheit</div>
+      <div class="feat-icon-box">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1.5L15.5 4v5c0 4-3 6.5-6.5 7.5C5.5 15.5 2.5 13 2.5 9V4L9 1.5z"/><path d="M6.5 9l2 2 3.5-3.5"/></svg>
+      </div>
+      <h3>Open-Source · DSGVO-konform · Hosting in der Schweiz</h3>
+      <p>Meyssens basiert auf <a href="https://decidim.org" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">Decidim</a> — quelloffen, geprüft und im Einklang mit der <a href="https://digital.swiss/de/" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">Strategie Digitale Schweiz 2026</a> des Bundesrats, die Open-Source-Software in der Verwaltung explizit fördert.</p>
+      <div class="tag-row">
+        <span class="tag">Open-Source</span>
+        <span class="tag">DSGVO</span>
+        <span class="tag">Schweizer Hosting</span>
+        <span class="tag">Strategie Digitale CH 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABLAUF -->
+<section id="ablauf">
+  <div class="r">
+    <span class="s-label">Ablauf</span>
+    <h2>In 4 Schritten live</h2>
+    <p class="s-lead">Von der ersten Kontaktaufnahme bis zum Launch — schnell, unkompliziert, persönlich begleitet.</p>
+  </div>
+  <div class="steps">
+    <div class="step r">
+      <div class="step-n">01</div>
+      <h3>Beratungsgespräch</h3>
+      <p>Wir analysieren die Bedürfnisse Ihrer Gemeinde und zeigen Ihnen die Demo live.</p>
+    </div>
+    <div class="step r d1">
+      <div class="step-n">02</div>
+      <h3>Konfiguration</h3>
+      <p>Wir richten die Plattform mit Ihrem Logo, Themen und Inhalten in 2–4 Wochen ein.</p>
+    </div>
+    <div class="step r d2">
+      <div class="step-n">03</div>
+      <h3>Schulung & Launch</h3>
+      <p>Ihr Team wird geschult, die Plattform freigeschaltet und wir begleiten Sie beim Start.</p>
+    </div>
+    <div class="step r d3">
+      <div class="step-n">04</div>
+      <h3>Laufender Betrieb</h3>
+      <p>Wir übernehmen Hosting, Updates und Support — Sie fokussieren sich auf die Inhalte.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PREISE -->
+<section id="preise">
+  <div class="r">
+    <span class="s-label">Preise</span>
+    <h2>Transparent. Fair. Skalierbar.</h2>
+    <p class="s-lead">Alle Pakete beinhalten Hosting, Updates und persönlichen Support. Keine versteckten Kosten.</p>
+  </div>
+  <div class="cards">
+    <div class="pcard r">
+      <div class="ptier">Starter</div>
+      <div class="ptitle">Kleine Gemeinde</div>
+      <div class="pdesc">Für Gemeinden bis 5'000 Einwohner — einfacher Einstieg ohne Risiko.</div>
+      <div class="psetup">Einrichtung <strong>Gratis</strong></div>
+      <div class="pamount"><span class="pnum">490</span><span class="punit">CHF / Monat</span></div>
+      <div class="pannual">5'880 CHF pro Jahr</div>
+      <hr class="phr">
+      <ul class="plist">
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bis 5'000 Einwohner</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bis 3 Beteiligungsprozesse</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Vorschläge & Abstimmung</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Veranstaltungskalender</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Hosting & Updates inklusive</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>E-Mail Support</li>
+      </ul>
+      <a href="#kontakt" class="pcta pcta-out">Jetzt anfragen</a>
+    </div>
+    <div class="pcard top r d1">
+      <div class="pbadge">Empfohlen</div>
+      <div class="ptier">Standard</div>
+      <div class="ptitle">Mittelgrosse Gemeinde</div>
+      <div class="pdesc">Für Gemeinden von 5'000–20'000 Einwohnern — voller Funktionsumfang.</div>
+      <div class="psetup">Einrichtung <strong>1'990 CHF</strong></div>
+      <div class="pamount"><span class="pnum">790</span><span class="punit">CHF / Monat</span></div>
+      <div class="pannual">9'480 CHF pro Jahr</div>
+      <hr class="phr">
+      <ul class="plist">
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>5'000–20'000 Einwohner</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Unbegrenzte Prozesse</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Partizipatives Budget</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Interaktive Karten</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Hosting & Updates inklusive</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prioritäts-Support</li>
+      </ul>
+      <a href="#kontakt" class="pcta pcta-fill">Jetzt anfragen</a>
+    </div>
+    <div class="pcard r d2">
+      <div class="ptier">Premium</div>
+      <div class="ptitle">Stadt & Kanton</div>
+      <div class="pdesc">Für grosse Städte und Kantone — maximale Anpassung und Begleitung.</div>
+      <div class="psetup">Einrichtung <strong>4'990 CHF</strong></div>
+      <div class="pamount"><span class="pnum">1'490</span><span class="punit">CHF / Monat</span></div>
+      <div class="pannual">17'880 CHF pro Jahr</div>
+      <hr class="phr">
+      <ul class="plist">
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Über 20'000 Einwohner</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Individuelle Anpassungen</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dediziertes Hosting</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>SLA-Garantie</li>
+        <li><span class="pcheck"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke="#0000ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>24/7 Support</li>
+      </ul>
+      <a href="#kontakt" class="pcta pcta-out">Jetzt anfragen</a>
+    </div>
+  </div>
+</section>
+
+<!-- REFERENZEN -->
+<section id="referenzen" style="background:var(--surface)">
+  <div class="r">
+    <span class="s-label">Referenzen</span>
+    <h2>Bewährt in über 400 Städten weltweit</h2>
+    <p class="s-lead">Decidim, die Technologie hinter Meyssens, ist bereits in Luzern, Lausanne, Zürich und bei der EU im Einsatz.</p>
+  </div>
+  <div class="ref-grid">
+    <div class="rcard r">
+      <div class="rstars"><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div></div>
+      <p class="rquote">"Decidim ermöglicht es uns, komplexe Beteiligungsprozesse auf einer einzigen Plattform zu managen — und dabei Kosten zu sparen."</p>
+      <div class="rauthor">
+        <div class="rav">LU</div>
+        <div><div class="rname"><a href="https://www.dialog.stadtluzern.ch" target="_blank" style="color:var(--ink);text-decoration:none">Stadt Luzern</a></div><div class="rorg">Dialog Luzern — Bürgerbeteiligung</div></div>
+      </div>
+    </div>
+    <div class="rcard r d1">
+      <div class="rstars"><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div></div>
+      <p class="rquote">"Mit Decidim können wir die Partizipation der Bürgerinnen und Bürger fördern und die lokale Demokratie nachhaltig stärken."</p>
+      <div class="rauthor">
+        <div class="rav" style="background:#1a1aff">LS</div>
+        <div><div class="rname"><a href="https://lausanneensemble.lausanne.ch" target="_blank" style="color:var(--ink);text-decoration:none">Stadt Lausanne</a></div><div class="rorg">«Lausanne macht mit»</div></div>
+      </div>
+    </div>
+    <div class="rcard r d2">
+      <div class="rstars"><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div><div class="rstar"></div></div>
+      <p class="rquote">"Decidim ist technisch ausgereift, hat eine breite Community und ist bestens anpassungsfähig für unsere spezifischen Anforderungen."</p>
+      <div class="rauthor">
+        <div class="rav" style="background:#3333ff">EU</div>
+        <div><div class="rname"><a href="https://futureu.europa.eu" target="_blank" style="color:var(--ink);text-decoration:none">Europäische Kommission</a></div><div class="rorg">Conference on the Future of Europe</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÜBER UNS -->
+<section id="ueber-uns">
+  <div class="about-grid">
+    <div class="r">
+      <span class="s-label">Über uns</span>
+      <h2>Ihr Schweizer Partner für digitale Partizipation</h2>
+      <p style="color:var(--ink3);line-height:1.8;margin-bottom:1.25rem;font-size:.975rem">Meyssens wurde mit einer klaren Mission gegründet: Schweizer Gemeinden den Zugang zu moderner, digitaler Bürgerbeteiligung zu ermöglichen — ohne grossen technischen Aufwand und zu fairen Preisen.</p>
+      <p style="color:var(--ink3);line-height:1.8;margin-bottom:1.25rem;font-size:.975rem">Wir setzen auf <a href="https://decidim.org" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">Decidim</a>, die bewährte Open-Source-Plattform, die weltweit in über 400 Städten eingesetzt wird. Als lokaler Anbieter aus der Schweiz kennen wir die Besonderheiten der Schweizer Verwaltung.</p>
+      <blockquote class="about-quote">"Jede Gemeinde verdient eine moderne Plattform, die Bürgerinnen und Bürger wirklich einbezieht."</blockquote>
+      <p style="color:var(--ink4);font-size:.82rem">Gründer Meyssens</p>
+    </div>
+    <div class="r d1">
+      <div class="acard">
+        <div class="acard-top">
+          <div>
+            <div class="astat-label">Gemeinden CH</div>
+            <div class="astat-val">2'200+</div>
+            <div class="astat-sub">potenzielle Kunden</div>
+          </div>
+          <div>
+            <div class="astat-label">Einrichtung</div>
+            <div class="astat-val">2–4 Wo.</div>
+            <div class="astat-sub">bis zum Launch</div>
+          </div>
+        </div>
+        <div class="acard-body">
+          <div class="tech-row">
+            <span class="tech-name"><a href="https://decidim.org" target="_blank" style="color:var(--ink);text-decoration:none">Decidim (Open-Source)</a></span>
+            <span class="tech-pill">Basis</span>
+          </div>
+          <div class="tech-row">
+            <span class="tech-name">DSGVO-konform</span>
+            <span class="tech-pill">Datenschutz</span>
+          </div>
+          <div class="tech-row">
+            <span class="tech-name"><a href="https://digital.swiss/de/" target="_blank" style="color:var(--ink);text-decoration:none">Strategie Digitale CH 2026</a></span>
+            <span class="tech-pill">Konform</span>
+          </div>
+          <div class="tech-row">
+            <span class="tech-name">Hosting in der Schweiz</span>
+            <span class="tech-pill">Infrastruktur</span>
+          </div>
+          <div class="tech-row">
+            <span class="tech-name">Mehrsprachig DE / FR / IT</span>
+            <span class="tech-pill">Sprachen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- VERTRAUEN -->
+<section id="vertrauen">
+  <div class="r">
+    <span class="s-label">Sicherheit & Vertrauen</span>
+    <h2>Gebaut für die Schweizer Verwaltung</h2>
+    <p class="s-lead">Gemeinden und öffentliche Institutionen stellen hohe Anforderungen an Datenschutz, Rechtssicherheit und Stabilität. Meyssens erfüllt diese.</p>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-card r">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1.5L15.5 4v5c0 4-3 6.5-6.5 7.5C5.5 15.5 2.5 13 2.5 9V4L9 1.5z"/><path d="M6.5 9l2 2 3.5-3.5"/></svg></div>
+      <h3>Schweizer Recht & DSGVO</h3>
+      <p>Alle Daten werden auf Schweizer Servern gespeichert. Die Plattform ist vollständig konform mit dem Schweizer Datenschutzgesetz (DSG) und der europäischen DSGVO.</p>
+    </div>
+    <div class="trust-card r d1">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="12" height="9" rx="2"/><path d="M6 8V5a3 3 0 0 1 6 0v3"/></svg></div>
+      <h3>Keine Abhängigkeit vom Anbieter</h3>
+      <p>Meyssens basiert auf Open-Source-Software. Sie behalten jederzeit die volle Kontrolle über Ihre Daten und können die Plattform unabhängig von Meyssens weiter betreiben.</p>
+    </div>
+    <div class="trust-card r d2">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l2.5 2.5"/></svg></div>
+      <h3>Langfristige Stabilität</h3>
+      <p>Monatliche Backups, 99.9% Verfügbarkeit und laufende Sicherheits-Updates. Klare Vertragslaufzeiten mit definierten Kündigungsfristen — keine versteckten Bindungen.</p>
+    </div>
+    <div class="trust-card r">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l5 5 9-9"/></svg></div>
+      <h3>Konform mit Bundesstrategie</h3>
+      <p>Die Plattform entspricht der <a href="https://digital.swiss/de/" target="_blank" style="color:var(--blue)">Strategie Digitale Schweiz 2026</a>, welche Open-Source-Software in der Verwaltung explizit fördert und empfiehlt.</p>
+    </div>
+    <div class="trust-card r d1">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="14" height="12" rx="2"/><path d="M2 7h14M6 3v4M12 3v4"/></svg></div>
+      <h3>Klare Vertragsbedingungen</h3>
+      <p>Schriftlicher Dienstleistungsvertrag mit definierten Leistungen, Preisen und Laufzeiten. Keine überraschenden Kostensteigerungen. Alles transparent und nachvollziehbar.</p>
+    </div>
+    <div class="trust-card r d2">
+      <div class="trust-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><path d="M9 6v3l2 2M6.5 3.5l1 1M11.5 3.5l-1 1"/></svg></div>
+      <h3>Persönlicher Ansprechpartner</h3>
+      <p>Sie erhalten einen festen Ansprechpartner — keine anonymen Support-Tickets. Direkte Kommunikation per E-Mail, Telefon oder Videokonferenz.</p>
+    </div>
+  </div>
+  <div class="trust-note r">
+    <div class="trust-note-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg>
+    </div>
+    <p><strong>Direkte Beschaffung möglich:</strong> Unterhalb des Schwellenwerts von CHF 150'000 können Schweizer Gemeinden Meyssens ohne öffentliche Ausschreibung direkt beauftragen — gemäss dem Bundesgesetz über das öffentliche Beschaffungswesen (BöB).</p>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<div class="cta-strip r">
+  <div>
+    <div class="cta-h">Bereit für Ihre persönliche Demo?</div>
+    <div class="cta-sub">Wir richten eine Demo speziell für Ihre Gemeinde ein — kostenlos und unverbindlich.</div>
+  </div>
+  <div class="cta-btns">
+    <a href="http://34.91.226.69:3000" target="_blank" class="btn-w">
+      Demo ansehen
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="#kontakt" class="btn-wg">Gespräch anfragen</a>
+  </div>
+</div>
+
+<!-- KONTAKT -->
+<section id="kontakt" style="background:var(--surface)">
+  <div class="contact-grid">
+    <div class="r">
+      <span class="s-label">Kontakt</span>
+      <h2>Bereit für den nächsten Schritt?</h2>
+      <p style="color:var(--ink3);margin-bottom:3rem;line-height:1.8;font-size:.975rem">Schreiben Sie uns oder vereinbaren Sie direkt eine kostenlose Demo-Präsentation für Ihre Gemeinde.</p>
+      <div class="cinfo-item">
+        <div class="cicon">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="14" height="10" rx="2"/><path d="M1.5 6l7 4.5 7-4.5"/></svg>
+        </div>
+        <div>
+          <div class="clabel">E-Mail</div>
+          <div class="cval"><a href="mailto:lionel@meyssens.ch" style="color:var(--blue);text-decoration:none;font-weight:500">lionel@meyssens.ch</a></div>
+        </div>
+      </div>
+      <div class="cinfo-item">
+        <div class="cicon">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="7"/><path d="M8.5 5v4l2.5 2"/></svg>
+        </div>
+        <div>
+          <div class="clabel">Demo-Plattform</div>
+          <div class="cval"><a href="http://34.91.226.69:3000" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">Demo ansehen →</a></div>
+        </div>
+      </div>
+      <div class="cinfo-item">
+        <div class="cicon">
+          <svg width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 1.5C5.74 1.5 3.5 3.74 3.5 6.5c0 4 5 9 5 9s5-5 5-9c0-2.76-2.24-5-5-5z"/><circle cx="8.5" cy="6.5" r="1.5"/></svg>
+        </div>
+        <div>
+          <div class="clabel">Standort</div>
+          <div class="cval"><a href="https://maps.google.com/?q=Lausen,+Basel-Landschaft,+Schweiz" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500">Lausen, Basel-Landschaft, Schweiz</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="ccard r d1">
+      <form onsubmit="submitForm(event)">
+        <div class="frow">
+          <div class="fgrp"><label class="flabel">Vorname</label><input class="finput" type="text" placeholder="Max" required></div>
+          <div class="fgrp"><label class="flabel">Nachname</label><input class="finput" type="text" placeholder="Muster" required></div>
+        </div>
+        <div class="fgrp"><label class="flabel">Gemeinde / Organisation</label><input class="finput" type="text" placeholder="Gemeinde Musterstadt" required></div>
+        <div class="fgrp"><label class="flabel">E-Mail</label><input class="finput" type="email" placeholder="max.muster@gemeinde.ch" required></div>
+        <div class="fgrp">
+          <label class="flabel">Paket-Interesse</label>
+          <select class="fselect">
+            <option>Starter – kleine Gemeinde (490 CHF/Mo.)</option>
+            <option>Standard – mittelgrosse Gemeinde (790 CHF/Mo.)</option>
+            <option>Premium – Stadt / Kanton (1'490 CHF/Mo.)</option>
+            <option>Noch nicht sicher</option>
+          </select>
+        </div>
+        <div class="fgrp"><label class="flabel">Nachricht (optional)</label><textarea class="ftextarea" placeholder="Ihre Fragen oder Wünsche..."></textarea></div>
+        <button type="submit" class="btn-p" id="sbtn" style="width:100%;justify-content:center;border-radius:var(--r-sm)">
+          Anfrage senden
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="flex-wrap:wrap;padding-bottom:1.75rem">
+  <a href="#" class="flogo"><img src="logo.png" alt="Meyssens"></a>
+  <p>© 2026 Meyssens · Lausen, Basel-Landschaft · <a href="mailto:lionel@meyssens.ch" style="color:rgba(255,255,255,.3);text-decoration:none">lionel@meyssens.ch</a></p>
+  <div class="flinks">
+    <a href="#funktionen">Funktionen</a>
+    <a href="#preise">Preise</a>
+    <a href="#vertrauen">Vertrauen</a>
+    <a href="#ueber-uns">Über uns</a>
+    <a href="#kontakt">Kontakt</a>
+    <a href="http://34.91.226.69:3000" target="_blank">Demo →</a>
+  </div>
+  <div class="footer-legal" style="width:100%">
+    <p>Meyssens · Lausen, Basel-Landschaft, Schweiz</p>
+    <div style="display:flex;gap:1.5rem">
+      <a href="#" onclick="openModal('impressum');return false">Impressum</a>
+      <a href="#" onclick="openModal('datenschutz');return false">Datenschutz</a>
+      <a href="#" onclick="openModal('agb');return false">AGB</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Nav shadow + active link
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>40)
+  const sections=['funktionen','ablauf','preise','vertrauen','ueber-uns','kontakt']
+  const links=document.querySelectorAll('.nav-items a:not(.nav-btn)')
+  let current=''
+  sections.forEach(id=>{
+    const el=document.getElementById(id)
+    if(el&&scrollY>=el.offsetTop-100) current=id
+  })
+  links.forEach(a=>{
+    a.classList.remove('active')
+    if(a.getAttribute('href')==='#'+current) a.classList.add('active')
+  })
+})
+
+// Reveal
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.1})
+document.querySelectorAll('.r').forEach(el=>io.observe(el))
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+  const t=document.querySelector(a.getAttribute('href'))
+  if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}
+}))
+
+// Form
+function submitForm(e){
+  e.preventDefault()
+  const b=document.getElementById('sbtn')
+  b.innerHTML='✓ Anfrage gesendet!'
+  b.style.background='#008844'
+  setTimeout(()=>{
+    b.innerHTML='Anfrage senden <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    b.style.background=''
+    e.target.reset()
+  },3000)
+}
+</script>
+
+<!-- IMPRESSUM MODAL -->
+<div class="modal-overlay" id="modal-impressum">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('impressum')">✕</div>
+    <h2>Impressum</h2>
+    <h3>Anbieter</h3>
+    <p>Meyssens<br>Lausen, Basel-Landschaft<br>Schweiz</p>
+    <h3>Kontakt</h3>
+    <p>E-Mail: <a href="mailto:lionel@meyssens.ch">lionel@meyssens.ch</a></p>
+    <h3>Rechtsform</h3>
+    <p>Einzelfirma, eingetragen gemäss Schweizer Recht.</p>
+    <h3>Haftungsausschluss</h3>
+    <p>Meyssens übernimmt keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der auf dieser Website bereitgestellten Informationen. Haftungsansprüche gegen Meyssens wegen materieller oder immaterieller Schäden, die durch die Nutzung oder Nichtnutzung der publizierten Informationen oder durch die Nutzung fehlerhafter und unvollständiger Informationen verursacht wurden, sind grundsätzlich ausgeschlossen.</p>
+    <h3>Urheberrecht</h3>
+    <p>Die auf dieser Website veröffentlichten Inhalte sind urheberrechtlich geschützt. Eine Vervielfältigung oder Verwendung dieser Seiten oder Teile davon in anderen elektronischen oder gedruckten Publikationen ist ohne ausdrückliche Erlaubnis nicht gestattet.</p>
+  </div>
+</div>
+
+<!-- DATENSCHUTZ MODAL -->
+<div class="modal-overlay" id="modal-datenschutz">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('datenschutz')">✕</div>
+    <h2>Datenschutzerklärung</h2>
+    <p>Meyssens nimmt den Schutz Ihrer persönlichen Daten ernst und behandelt Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften (DSG, DSGVO) sowie dieser Datenschutzerklärung.</p>
+    <h3>Verantwortliche Stelle</h3>
+    <p>Meyssens, Lausen, Basel-Landschaft, Schweiz<br>E-Mail: <a href="mailto:lionel@meyssens.ch">lionel@meyssens.ch</a></p>
+    <h3>Erhobene Daten</h3>
+    <p>Über das Kontaktformular erheben wir folgende Daten:</p>
+    <ul>
+      <li>Name und Vorname</li>
+      <li>E-Mail-Adresse</li>
+      <li>Telefonnummer (optional)</li>
+      <li>Name der Gemeinde / Organisation</li>
+      <li>Nachricht</li>
+    </ul>
+    <h3>Zweck der Datenerhebung</h3>
+    <p>Die erhobenen Daten werden ausschliesslich zur Bearbeitung Ihrer Anfrage und zur Kontaktaufnahme verwendet. Eine Weitergabe an Dritte findet nicht statt.</p>
+    <h3>Datenspeicherung</h3>
+    <p>Ihre Daten werden auf Servern in der Schweiz gespeichert. Sie haben jederzeit das Recht auf Auskunft, Berichtigung oder Löschung Ihrer gespeicherten Daten. Kontaktieren Sie uns unter <a href="mailto:lionel@meyssens.ch">lionel@meyssens.ch</a>.</p>
+    <h3>Cookies</h3>
+    <p>Diese Website verwendet keine Tracking-Cookies und keine Analyse-Tools von Drittanbietern.</p>
+  </div>
+</div>
+
+<!-- AGB MODAL -->
+<div class="modal-overlay" id="modal-agb">
+  <div class="modal">
+    <div class="modal-close" onclick="closeModal('agb')">✕</div>
+    <h2>Allgemeine Geschäftsbedingungen</h2>
+    <h3>1. Geltungsbereich</h3>
+    <p>Diese AGB gelten für alle Dienstleistungsverträge zwischen Meyssens und Kunden (Gemeinden, Städte, öffentliche Institutionen).</p>
+    <h3>2. Leistungsumfang</h3>
+    <p>Meyssens stellt eine digitale Bürgerbeteiligungs-Plattform basierend auf der Open-Source-Software Decidim zur Verfügung, inklusive Einrichtung, Hosting, Updates und Support gemäss gewähltem Paket.</p>
+    <h3>3. Vertragslaufzeit</h3>
+    <p>Die Mindestvertragslaufzeit beträgt 12 Monate. Nach Ablauf der Mindestlaufzeit verlängert sich der Vertrag monatlich und kann mit einer Frist von 30 Tagen zum Monatsende gekündigt werden.</p>
+    <h3>4. Preise und Zahlungsbedingungen</h3>
+    <p>Die monatlichen Gebühren sind im Voraus zu entrichten. Rechnungen werden monatlich ausgestellt. Alle Preise verstehen sich in CHF exklusive Mehrwertsteuer, sofern anwendbar.</p>
+    <h3>5. Datenschutz und Datensicherheit</h3>
+    <p>Meyssens speichert alle Kundendaten auf Servern in der Schweiz. Der Kunde behält jederzeit das vollständige Eigentum an seinen Daten und kann diese bei Vertragsende vollständig exportieren.</p>
+    <h3>6. Verfügbarkeit</h3>
+    <p>Meyssens strebt eine Verfügbarkeit von 99.9% an. Geplante Wartungsarbeiten werden mindestens 48 Stunden im Voraus angekündigt.</p>
+    <h3>7. Haftung</h3>
+    <p>Meyssens haftet nur bei Vorsatz oder grober Fahrlässigkeit. Die Haftung ist auf den Jahresbetrag des jeweiligen Vertrags begrenzt.</p>
+    <h3>8. Anwendbares Recht</h3>
+    <p>Es gilt Schweizer Recht. Gerichtsstand ist Lausen, Basel-Landschaft, Schweiz.</p>
+    <h3>9. Kontakt</h3>
+    <p>Bei Fragen zu diesen AGB: <a href="mailto:lionel@meyssens.ch">lionel@meyssens.ch</a></p>
+  </div>
+</div>
+
+<script>
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open')
+  document.body.style.overflow='hidden'
+}
+function closeModal(id){
+  document.getElementById('modal-'+id).classList.remove('open')
+  document.body.style.overflow=''
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m){m.classList.remove('open');document.body.style.overflow=''}})
+})
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'))
+    document.body.style.overflow=''
+  }
+})
+</script>
+
+</body>
+</html>
